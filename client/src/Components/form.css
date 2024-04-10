@@ -1,0 +1,11 @@
+.red{
+    color: red;
+}
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.container input{
+    font-size: 20px;
+}

@@ -1,0 +1,42 @@
+
+.inp{
+    padding-left: 100px;
+}
+.input{
+    width: 20vw;
+    font-size: 20px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+.main{
+    font-size: 20px;
+    width: 80vw;
+    padding-left: 100px;
+    align-content: center;
+}
+.correct{
+    font-weight: bold;
+    color: green;
+}
+.incorrect{
+    font-weight: bold;
+    color: red;
+}
+.active{
+    font-weight: bold;
+}
+.speed{
+    display: flex;
+    gap: 20px;
+    font-size: 22px;
+    padding-top: 20px;
+
+}
+.random-btn{
+    display: flex;
+    justify-content: center;
+    margin: 30px 0 30px 0;
+    gap: 20px;
+}
+
+

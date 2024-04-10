@@ -1,0 +1,15 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: 100%;
+}
+nav{
+    display: flex;
+    justify-content: space-between;
+    text-decoration-line: none;
+    font-size: 30px;
+    margin-bottom: 20px;
+    color: green;
+    padding: 15px;
+    border-bottom:0.5px solid black ;
+}
