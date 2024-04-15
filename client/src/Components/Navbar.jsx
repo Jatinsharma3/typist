@@ -14,7 +14,7 @@ const Navbar = () => {
         </NavLink>
 
         <NavLink to={'/login'}  className="nav-link">
-          Login
+          SignUp
         </NavLink>
 
 

@@ -1,11 +1,61 @@
-.red{
-    color: red;
-}
-.container{
+.container {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-}
-.container input{
-    font-size: 20px;
-}
+  }
+  
+  .container h2 {
+    margin-bottom: 20px;
+  }
+  
+  .container form {
+    width: 300px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .container label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .container label p {
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  
+  .container input[type="text"],
+  .container input[type="email"],
+  .container input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .container input[type="submit"],
+  .container button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 10px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .container input[type="submit"]:hover,
+  .container button:hover {
+    background-color: #0056b3;
+  }
+  
+  .container .error {
+    color: red;
+    margin-top: 10px;
+  }
+  

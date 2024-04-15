@@ -1,61 +1,96 @@
-import React from 'react'
-import { useForm } from 'react-hook-form'
+import React, { useState } from 'react';
 import './form.css'
 
 const Form = () => {
-    
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors, isSubmitting },
-  } = useForm()
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false); 
 
-  const delay = async(d)=>{
-    return new Promise((rsolve,reject)=>{
-      setTimeout(() => {
-        rsolve()
-      }, d*1000);
-    })
-  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
   
-  const onSubmit = async(data) => {
-    await delay(1)
-    let r = await fetch("http://localhost:3000/",{method: "POST", headers: {
-      "Content-Type": "application/json"}, body: JSON.stringify(data)})
-    let res = await r.text()
-    console.log(data,res)
-  }
+    try {
+      let data = {
+        'name': e.target[0].value,
+        'email': e.target[1].value,
+        'password': e.target[2].value
+      }
+      const response = await fetch("http://localhost:5000/register", {
+        method: "POST",
+        headers:{ 
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      if (!response.ok) {
+        throw new Error('Failed to submit form');
+      }
+      console.log('Form submitted successfully');
+    } catch (error) {
+      setError('Failed to submit form');
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
-    <>
-    
-      <div className="container">
-        <form action="" onSubmit={handleSubmit(onSubmit)}>
-   
-          
-          <input {...register("username", { required: {value:true,message:"This field is required"} ,minLength: {value:3,message:"Minlength is 3"} , maxLength:{value:8,message:"Maxlength is 8"}})} 
-         placeholder='username' type="text" />
-          {errors.username && <span className='red'>{errors.username.message}</span>}
-          <br/>
-          <br/>
+    <div className="container">
+      <h2>SignUp</h2>
+      <form onSubmit={handleSubmit}>
+        <label>
+          <p>Username</p>
+          <input
+            name="username"
+            type="text"
+            required
+            minLength={4}
+            maxLength={20}
+          />
+        </label>
+        <label>
+          <p>Email</p>
+          <input
+            name="email"
+            type="email"
+            required
+          />
+        </label>
+        <label>
+          <p>Password</p>
+          <div style={{position: 'relative'}}>
+            <input
+              name="password"
+              type={showPassword ? "text" : "password"}
+              required
+              minLength={8}
+              maxLength={20}
+            />
+            <span
+              style={{position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer'}}
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? "Hide" : "Show"}
+            </span>
+          </div>
+        </label>
+        <br />
+        <input
+          type="submit"
+          value={isLoading ? "Submitting..." : "Submit"}
+          disabled={isLoading}
+        />
+        {error && <div className="error">{error}</div>}
+      </form>
+    </div>
+  );
+};
 
-
-          
-          <input {...register("email", { required: {value:true,message:"This field is required"}, minLength:{value:10,message:"Minlength is 10"}})} placeholder='email' type="email" />
-          {errors.email && <span className='red'>{errors.email.message}</span>}
-          <br/>
-          <br/>
-          <input {...register("password", { required: {value:true,message:"This field is required"}, minLength:{value:3,message:"Minlength is 3"}})} placeholder='password' type="password" />
-          {errors.password && <span className='red'>{errors.password.message}</span>}
-          <br/>
-          <br/>
-          <input disabled={isSubmitting} type="submit" value="submit" />
-          {isSubmitting && <div>Loading..</div> }
-          <br/>
-        </form>
-      </div>
-      </>
-  )
-}
-
-export default Form
+export default Form;
