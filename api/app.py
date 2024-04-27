@@ -1,16 +1,26 @@
-from flask import Flask, request, jsonify
+from flask import Flask, make_response, request, jsonify
 from flask_mysqldb import MySQL
 from flask_cors import CORS
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
+from flask_jwt_extended import JWTManager
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
-CORS(app)
+CORS(app,supports_credentials=True)
+
+expiration_time = datetime.now() + timedelta(days=7)
 
 app.config['MYSQL_HOST'] = 'mysql-2f5470bb-sunilsharma97160-51e9.b.aivencloud.com'
 app.config['MYSQL_USER'] = 'avnadmin'
 app.config['MYSQL_PASSWORD'] = 'AVNS_q_WA4x48ufadpSCRcdu'
 app.config['MYSQL_DB'] = 'defaultdb'
 app.config['MYSQL_PORT'] = 25196
+app.config["JWT_SECRET_KEY"] = '1023'
+app.config['JWT_TOKEN_LOCATION'] = ['headers', 'cookies']
 
+jwt = JWTManager(app)
 mysql = MySQL(app)
 
 @app.route('/')
@@ -20,10 +30,44 @@ def index():
         cur.execute('''SELECT * FROM users''')
         results = cur.fetchall() 
         cur.close()
-        return {'data': results}, 200
+        if results:
+            return {'Tables' : results}
+        else:
+            return {'Err' : "No tables"}
+        # return {'data': results}, 200
     except Exception as e:
         return 'Error connecting to the database: {}'.format(str(e))
 
+@app.route('/login', methods=['POST'])
+def login():
+    try:
+        data = request.get_json()
+        email = data['email']
+        password = data['password']
+
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM users WHERE email = %s', (email,))
+        user = cur.fetchone()
+        cur.close()
+        print(user[2])
+
+        if user:
+            if user[2] == password:
+                access_token = create_access_token(identity=email, expires_delta=timedelta(days=7))
+                response = make_response(jsonify({'success': True}))
+                response.set_cookie('access_token_cookie', access_token, expires=expiration_time, httponly=True, secure=True, samesite='None')
+                print(response)
+                return response
+            else:
+                return {"error": "Incorrect password"}, 401
+        else:
+            return {"error": "User not found"}, 404
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500   
+
+
+     
 @app.route('/register', methods=['POST'])
 def register():
     # if request.method == 'POST':

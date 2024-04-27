@@ -1,0 +1,53 @@
+.container {
+    max-width: 350px;
+    margin: 0 auto;
+    padding: 20px;
+    /* border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-group button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-group button:hover {
+    background-color: #0056b3;
+}
+
+.lp {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.lp a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.lp a:hover {
+    text-decoration: underline;
+}
+.lh{
+    text-align: center;
+    margin-top: 5px;
+    font-size: 28px;
+}

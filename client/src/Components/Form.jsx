@@ -25,7 +25,11 @@ const Form = () => {
         },
         body: JSON.stringify(data)
       });
-      if (!response.ok) {
+      if (response.ok) {
+        window.location.href="/login";
+      }
+      else{
+
         throw new Error('Failed to submit form');
       }
       console.log('Form submitted successfully');
