@@ -38,7 +38,7 @@ const Login = () => {
                 <h2 className='lh'>Login</h2>
            <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                    <input type='text' placeholder='Email' />
+                    <input type='email' placeholder='Email' />
                 </div>
                 <div className="form-group">
                     <input type='password' placeholder='Password' />
@@ -48,7 +48,7 @@ const Login = () => {
                 </div>
                 <p className='lp'>Don't have an account? <a href="/register">Sign up</a></p>
             </form>
-            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+            {errorMessage && <p style={{ color: 'red', fontSize: '18px', marginTop: "5px" }}>{errorMessage}</p>}
         </div>
     );
 };
