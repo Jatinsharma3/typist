@@ -116,16 +116,19 @@ def logout():
     response.set_cookie('access_token_cookie', '', expires=0, httponly=True, secure=True, samesite='None')
     return response
 
-
-# @app.route('/dashboard')
-# def dashboard():
-#     try:
-#         verify_jwt_in_request()
-#         user_email = get_jwt_identity()
-#         if get_jwt_identity():
-#              return jsonify(logged_in=True, user= user_email), 200
-#     except Exception as e:
-#         return jsonify({'error': 'Internal Server Error'}), 500
+@jwt_required
+@app.route('/dashboard')
+def dashboard():
+    try:
+        verify_jwt_in_request()
+        email = get_jwt_identity()
+        cur = mysql.connection.cursor()
+        cur.execute('''SELECT username FROM users WHERE email = %s'''
+        , [email])
+        username = cur.fetchone()
+        return jsonify({'success': True, 'username': username})
+    except Exception as e:
+        return jsonify({'error': 'Internal Server Error'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
