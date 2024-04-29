@@ -4,6 +4,8 @@ import App from './App.jsx'
 import './index.css'
 import Form from './Components/Form.jsx'
 import Login from './Components/login.jsx'
+import Dashboard from './Components/Dashboard.jsx'
+
 import { RouterProvider, createBrowserRouter} from "react-router-dom";
 const Router = () =>{
   const router = createBrowserRouter([
@@ -19,6 +21,10 @@ const Router = () =>{
     {
       path: "/login",
       element: <Login/>
+    },
+    {
+      path: "/dashboard",
+      element: <Dashboard/>
     },
    
     // {

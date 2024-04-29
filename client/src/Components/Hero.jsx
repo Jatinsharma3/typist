@@ -76,7 +76,7 @@ const Hero = () => {
 
             const response = await fetch("http://127.0.0.1:5000");
             const py = await response.json();
-            console.log(py);
+            // console.log(py);
         }
         fetchdata()
     })

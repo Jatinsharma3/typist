@@ -1,10 +1,12 @@
+# .\Scripts\Activate.ps1
+
 from flask import Flask, make_response, request, jsonify
-from flask_mysqldb import MySQL
+from flask_mysqldb import MySQL # type: ignore
 from flask_cors import CORS
-from flask_jwt_extended import create_access_token
-from flask_jwt_extended import get_jwt_identity
-from flask_jwt_extended import jwt_required
-from flask_jwt_extended import JWTManager
+from flask_jwt_extended import create_access_token # type: ignore
+from flask_jwt_extended import get_jwt_identity # type: ignore
+from flask_jwt_extended import jwt_required,verify_jwt_in_request # type: ignore
+from flask_jwt_extended import JWTManager # type: ignore
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
@@ -34,9 +36,9 @@ def index():
             return {'Tables' : results}
         else:
             return {'Err' : "No tables"}
-        # return {'data': results}, 200
     except Exception as e:
         return 'Error connecting to the database: {}'.format(str(e))
+
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -67,10 +69,8 @@ def login():
         return jsonify({'error': str(e)}), 500   
 
 
-     
 @app.route('/register', methods=['POST'])
 def register():
-    # if request.method == 'POST':
         try:
             print("ok")
             data = request.get_json()
@@ -92,6 +92,40 @@ def register():
             return jsonify({'message': 'User registered successfully'}), 201
         except Exception as e:
             return jsonify({'error': 'Failed to register user'}), 500
+        
+
+# checklogin
+
+@jwt_required
+@app.route('/check-login')
+def checkLogin():
+    try:
+        verify_jwt_in_request()
+        user_id = get_jwt_identity()
+        if get_jwt_identity():
+            return jsonify(logged_in=True, user= user_id), 200
+    except Exception as e:
+        return jsonify({'error': 'Internal Server Error'}), 500
+
+# logout
+
+@app.route('/logout')
+def logout():
+    response = jsonify({'logout': True})
+    response = make_response(response)
+    response.set_cookie('access_token_cookie', '', expires=0, httponly=True, secure=True, samesite='None')
+    return response
+
+
+# @app.route('/dashboard')
+# def dashboard():
+#     try:
+#         verify_jwt_in_request()
+#         user_email = get_jwt_identity()
+#         if get_jwt_identity():
+#              return jsonify(logged_in=True, user= user_email), 200
+#     except Exception as e:
+#         return jsonify({'error': 'Internal Server Error'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
