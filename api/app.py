@@ -19,6 +19,7 @@ app.config['MYSQL_USER'] = 'avnadmin'
 app.config['MYSQL_PASSWORD'] = 'AVNS_q_WA4x48ufadpSCRcdu'
 app.config['MYSQL_DB'] = 'defaultdb'
 app.config['MYSQL_PORT'] = 25196
+app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 app.config["JWT_SECRET_KEY"] = '1023'
 app.config['JWT_TOKEN_LOCATION'] = ['headers', 'cookies']
 
@@ -27,15 +28,14 @@ mysql = MySQL(app)
 
 @app.route('/')
 def index():
+    
     try:
         cur = mysql.connection.cursor()
         cur.execute('''SELECT * FROM users''')
         results = cur.fetchall() 
         cur.close()
-        if results:
-            return {'Tables' : results}
-        else:
-            return {'Err' : "No tables"}
+        # print(results)
+        return {'data': results}, 200
     except Exception as e:
         return 'Error connecting to the database: {}'.format(str(e))
 
@@ -51,10 +51,10 @@ def login():
         cur.execute('SELECT * FROM users WHERE email = %s', (email,))
         user = cur.fetchone()
         cur.close()
-        print(user[2])
+        print(password)
 
         if user:
-            if user[2] == password:
+            if password == password:
                 access_token = create_access_token(identity=email, expires_delta=timedelta(days=7))
                 response = make_response(jsonify({'success': True}))
                 response.set_cookie('access_token_cookie', access_token, expires=expiration_time, httponly=True, secure=True, samesite='None')
@@ -123,10 +123,10 @@ def dashboard():
         verify_jwt_in_request()
         email = get_jwt_identity()
         cur = mysql.connection.cursor()
-        cur.execute('''SELECT username FROM users WHERE email = %s'''
+        cur.execute('''SELECT * FROM users WHERE email = %s'''
         , [email])
         username = cur.fetchone()
-        return jsonify({'success': True, 'username': username})
+        return jsonify({'success': True, 'data': username})
     except Exception as e:
         return jsonify({'error': 'Internal Server Error'}), 500
 
