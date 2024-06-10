@@ -1,44 +1,54 @@
-import {React,useEffect,useState} from 'react'
+import React, { useEffect, useState } from 'react';
+import './dashboard.css'
 
 const Dashboard = () => {
-  const [data, setData] = useState(null)
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handlesubmit = async()=> {
-
-  try {
-    const response = await fetch("http://127.0.0.1:5000" + '/dashboard', {
+  const fetchUserData = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:5000/dashboard", {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', 
+        credentials: 'include',
       });
 
-    if (response.ok) {
-      const data = await response.json()
-      console.log(data)
-      setData(data)
-    } 
-    else {
-      console.error('Data not fetch');
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Fetched data:', result);
+        setData(result.data);
+        setLoading(false); 
+      } else {
+        console.error('Failed to fetch data');
+        setError('Failed to fetch data');
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error('Failed to fetch user data', error);
+      setError('Failed to fetch user data');
+      setLoading(false);
     }
-  } 
-  catch (error) {
-    console.error('NOt fetch user data', error);
-  }
-}
+  };
 
-useEffect(() => {
-  handlesubmit()
-}, [])
+  useEffect(() => {
+    fetchUserData();
+  }, []);
 
-
-
+  // useEffect(() => {
+  //   console.log('Updated data:', data); 
+  // }, [data]);
 
   return (
     <div className="profile">
-       <h1 className="profile-center">Dashboard</h1>
-      {data && (
+      <h1 className="profile-center">Dashboard</h1>
+      {loading ? (
+        <div>Loading user data...</div>
+      ) : error ? (
+        <div>{error}</div>
+      ) : data ? (
         <div className="profile-container">
           <h2>User Information</h2>
           <p>ID: {data.id}</p>
@@ -55,9 +65,11 @@ useEffect(() => {
           <p>Tests Today: {data.code_tests_today}</p>
           <p>Highest WPM Ever: {data.highest_code_wpm_ever}</p>
         </div>
+      ) : (
+        <div>No user data available</div>
       )}
-</div>
-  )
-}
+    </div>
+  );
+};
 
-export default Dashboard
+export default Dashboard;
