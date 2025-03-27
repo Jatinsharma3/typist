@@ -104,12 +104,22 @@ const Hero = () => {
         }
         if (value.endsWith(' ')) {
             if (activeWord === cloud.split(' ').length - 1) {
-                setStartCounting(false);
-                setUserInput("Completed");
+                if(value.length -1 >= cloud.split(' ')[activeWord].length){
+
+                    // functionfv
+
+                    setStartCounting(false);
+                    setUserInput("Completed");
+                } 
             } else {
-                setUserInput("");
+                if(value.length -1 >= cloud.split(' ')[activeWord].length) setUserInput("");
             }
-            setActiveWord((index) => index + 1);
+            // console.log(value.length)
+            // console.log(cloud.split(' ')[activeWord].length)
+            if(value.length-1 >= cloud.split(' ')[activeWord].length){
+                setActiveWord((index) => index + 1);
+                // console.log(1)
+            } 
             setCorrectWord((data) => {
                 const word = value.trim();
                 const newResult = [...data];
